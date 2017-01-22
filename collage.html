@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />    
+	<script src="scripts/imaging.js"></script>
+    <script src="scripts/collage.js"></script>
+</head>
+<body>
+    <canvas id="collage" width="900" height="900"></canvas>
+	
+	<script type="text/javascript">
+	
+	function loadImages(sources, callback) {
+            var images = {};
+            var loadedImages = 0;
+            var numImages = 0;
+            // get num of sources
+            for (var src in sources) {
+                numImages++;
+            }
+            for (var src in sources) {
+                images[src] = new Image();
+                images[src].onload = function () {
+                    if (++loadedImages >= numImages) {
+                        callback(images);
+                    }
+                };
+                images[src].src = sources[src];
+            }
+        }
+        var canvas = document.getElementById('collage');
+        var context = canvas.getContext('2d');
+
+        var sources = {            
+            a: 'images/a.jpg',
+            b: 'images/b.jpg',
+            c: 'images/c.jpg',
+            d: 'images/d.jpg',
+            e: 'images/e.jpg',
+            f: 'images/f.jpg',
+            g: 'images/g.jpg',
+            h: 'images/h.jpg',
+            i: 'images/i.jpg',
+            j: 'images/j.jpg',
+			k: 'images/k.jpg',
+			l: 'images/l.jpg',
+            m: 'images/m.jpg',
+            n: 'images/n.jpg',
+            o: 'images/o.jpg',
+            p: 'images/p.jpg',
+            q: 'images/q.jpg',
+        };
+
+
+
+        loadImages(sources, function (images) {
+
+            //context.globalCompositeOperation = "destination-over";
+
+            var masks = [
+                getImageMask(images.a),
+                getImageMask(images.b),
+                getImageMask(images.c),
+                getImageMask(images.d),                
+                getImageMask(images.e),
+                getImageMask(images.f),
+                getImageMask(images.g),
+                getImageMask(images.h),
+                getImageMask(images.i),
+                getImageMask(images.j),
+                getImageMask(images.k),
+                getImageMask(images.l),
+                getImageMask(images.m),
+                getImageMask(images.n),
+                getImageMask(images.o),
+                getImageMask(images.p),
+                getImageMask(images.q),
+                getImageMask(images.a),
+                getImageMask(images.b),
+                getImageMask(images.c),
+                getImageMask(images.d),                
+                getImageMask(images.e),
+                getImageMask(images.f),
+                getImageMask(images.g),
+                getImageMask(images.h),
+                getImageMask(images.i),
+                getImageMask(images.j),
+                getImageMask(images.k),
+                getImageMask(images.l),
+                getImageMask(images.m),
+                getImageMask(images.n),
+                getImageMask(images.o),
+                getImageMask(images.p),
+                getImageMask(images.q),
+                getImageMask(images.a),
+                getImageMask(images.b),
+                getImageMask(images.c),
+                getImageMask(images.d),                
+                getImageMask(images.e),
+                getImageMask(images.f),
+                getImageMask(images.g),
+                getImageMask(images.h),
+                getImageMask(images.i),
+                getImageMask(images.j),
+                getImageMask(images.k),
+                getImageMask(images.l),
+                getImageMask(images.m),
+                getImageMask(images.n),
+                getImageMask(images.o),
+                getImageMask(images.p),
+                getImageMask(images.q),
+                getImageMask(images.a),
+                getImageMask(images.b),
+                getImageMask(images.c),
+                getImageMask(images.d),                
+                getImageMask(images.e),
+                getImageMask(images.f),
+                getImageMask(images.g),
+                getImageMask(images.h),
+                getImageMask(images.i),
+                getImageMask(images.j),
+                getImageMask(images.k),
+                getImageMask(images.l),
+                getImageMask(images.m),
+                getImageMask(images.n),
+                getImageMask(images.o),
+                getImageMask(images.p),
+                getImageMask(images.q),
+                getImageMask(images.a),
+                getImageMask(images.b),
+                getImageMask(images.c),
+                getImageMask(images.d),                
+                getImageMask(images.e),
+                getImageMask(images.f),
+                getImageMask(images.g),
+                getImageMask(images.h),
+                getImageMask(images.i),
+                getImageMask(images.j),
+                getImageMask(images.k),
+                getImageMask(images.l),
+                getImageMask(images.m),
+                getImageMask(images.n),
+                getImageMask(images.o),
+                getImageMask(images.p),
+                getImageMask(images.q),
+                
+            ];
+
+            for (var i = 0; i < masks.length; i++) {
+                var ratio = getAspectRatio(masks[i].width, masks[i].height);
+
+                var multiplier = 1;
+
+                if (i % 5 == 0 && i % 3 == 0) {
+                    multiplier = 1.1;
+                }
+                else if (i % 5 == 0) {
+                    multiplier = 1.13;
+                }
+                else if (i % 3 == 0) {
+                    multiplier = 1.3;
+                }
+               
+
+                masks[i].renderHeight = ratio.height*multiplier;
+                masks[i].renderWidth = ratio.width*multiplier;
+            }
+
+            var builder = new CollageBuilder(900, 900);
+            builder.fit(masks);
+
+
+            for (var i = 0; i < masks.length; i++) {
+                if (masks[i].fit) {
+                    context.drawImage(masks[i], masks[i].startX, masks[i].startY, masks[i].renderWidth, masks[i].renderHeight);
+                }
+            }
+
+            //DRAW BOARD TEMP
+            drawBoard(canvas, context);
+
+           
+            grayScale(context, canvas);
+
+           /* canvas.addEventListener('mousemove', function (evt) {
+                var mousePos = getMousePos(canvas, evt);
+                var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+                console.log(message);
+            }, false);
+            */
+        });
+	
+	</script>
+	
+</body>
+</html>

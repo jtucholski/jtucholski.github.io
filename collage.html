@@ -167,7 +167,7 @@
                 masks[i].renderWidth = ratio.width*multiplier;
             }
 
-            var builder = new CollageBuilder(900, 900);
+            var builder = new CollageBuilder(900, 900, 18, 18);
             builder.fit(masks);
 
 
@@ -178,7 +178,7 @@
             }
 
             //DRAW BOARD TEMP
-            //drawBoard(canvas, context);
+            drawBoard(canvas, context);
 
            
             grayScale(context, canvas);

@@ -1,7 +1,7 @@
 function getAspectRatio(width, height) {
 
 	var actualRatio = width / height;
-	var baseResolution = 100;
+	var baseResolution = 200;
 
 	var ratios = [
 		{ size: 1.778, width: baseResolution * 1.778, height: baseResolution }, //16:9
@@ -38,7 +38,7 @@ function getImageMask(image) {
 	mctx.shadowColor = 'black';
 	mctx.shadowOffsetX = mask.width;
 	mctx.shadowOffsetY = 0;
-	mctx.shadowBlur = 20;
+	mctx.shadowBlur = 30;
 
 	drawRoundedRectangle(mctx, 20, 20, image.width - 40, image.height - 40, 20);
 

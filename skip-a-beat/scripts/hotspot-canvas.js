@@ -25,46 +25,62 @@ HotspotCanvas.prototype = {
         });
     },
 
+    addImageToHotspot: function (hotspotRect) {
+        var _this = this;
+
+        this.addImage(this.selectedPhotoUrl,
+            {
+                originX: 'left',
+                originY: 'top',
+                lockUniScaling: true,
+                lockRotation: true,
+                left: hotspotRect.hotspot.x,
+                top: hotspotRect.hotspot.y,
+                clipTo: function (ctx) {
+                    var retina = _this.canvas.getRetinaScaling();
+                    ctx.save();
+                    ctx.setTransform(retina, 0, 0, retina, 0, 0);
+                    ctx.rect(
+                        hotspotRect.left,
+                        hotspotRect.top,
+                        hotspotRect.width,
+                        hotspotRect.height);
+                    ctx.restore();
+                }
+            }, function (img) {
+
+                if (hotspotRect.width > hotspotRect.height) {
+                    img.scaleToWidth(hotspotRect.width);
+                }
+                else {
+                    img.scaleToHeight(hotspotRect.height);
+                }
+
+            });
+    },
+
     setEventHandlers: function () {
         var _this = this;
+
+        var disableScroll = function () {
+            _this.canvas.allowTouchScrolling = false;
+        };
+
+        var enableScroll = function () {
+            _this.canvas.allowTouchScrolling = true;
+        };
+
+        this.canvas.on('object:moving', disableScroll);
+        this.canvas.on('object:scaling', disableScroll);
+        this.canvas.on('object:rotating', disableScroll);
+        this.canvas.on('mouse:up', enableScroll);
+
+
         var objects = this.canvas.getObjects('rect');
         objects.forEach(function (rect) {
             rect.on('mouseup', function () {
-
-
                 if (_this.enabled) {
-                    var _hotspotRect = this;
-
-                    _this.addImage(_this.selectedPhotoUrl,
-                        {
-                            originX: 'left',
-                            originY: 'top',
-                            lockUniScaling: true,
-                            lockRotation: true,
-                            left: _hotspotRect.hotspot.x,
-                            top: _hotspotRect.hotspot.y,
-                            clipTo: function (ctx) {
-                                var retina = _this.canvas.getRetinaScaling();
-                                ctx.save();
-                                ctx.setTransform(retina, 0, 0, retina, 0, 0);
-                                ctx.rect(
-                                    _hotspotRect.left,
-                                    _hotspotRect.top,
-                                    _hotspotRect.width,
-                                    _hotspotRect.height);
-                                ctx.restore();
-                            }
-                        }, function (img) {
-
-                            if (_hotspotRect.width > _hotspotRect.height) {
-                                img.scaleToWidth(_hotspotRect.width);
-                            }
-                            else {
-                                img.scaleToHeight(_hotspotRect.height);
-                            }
-
-                        });
-
+                    _this.addImageToHotspot(this);
                     _this.enableHotspots(false);
                 }
             }, this);
@@ -120,7 +136,9 @@ HotspotCanvas.prototype = {
     },
 
     getDataUrl: function () {
-        return this.canvas.toDataURL();
+        return this.canvas.toDataURL({
+
+        });
     },
 
     enableHotspots: function (shouldEnable) {
@@ -135,7 +153,9 @@ HotspotCanvas.prototype = {
             rect.bringToFront();
         }, this);
 
-    }
+    },
+
+
 
 }
 

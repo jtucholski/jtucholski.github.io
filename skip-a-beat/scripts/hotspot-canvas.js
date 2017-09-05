@@ -33,7 +33,7 @@ HotspotCanvas.prototype = {
                 originX: 'left',
                 originY: 'top',
                 lockUniScaling: true,
-                lockRotation: true,
+                lockRotation: false,
                 left: hotspotRect.hotspot.x,
                 top: hotspotRect.hotspot.y,
                 clipTo: function (ctx) {

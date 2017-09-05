@@ -30,8 +30,8 @@ HotspotCanvas.prototype = {
 
     addImageToHotspot: function (hotspotRect) {
         var _this = this;
-
-        hotspotRect.image = true;
+        
+        hotspotRect.image = true;        
 
         this.addImage(this.selectedPhotoUrl,
             {
@@ -55,12 +55,12 @@ HotspotCanvas.prototype = {
 
             }, function (img) {
 
-                if (hotspotRect.width > hotspotRect.height) {
-                    img.scaleToWidth(hotspotRect.width);
-                }
-                else {
-                    img.scaleToHeight(hotspotRect.height);
-                }
+                // if (hotspotRect.width > hotspotRect.height) {
+                //     img.scaleToWidth(hotspotRect.width);
+                // }
+                // else {
+                //     img.scaleToHeight(hotspotRect.height);
+                // }
             });
     },
 
@@ -161,20 +161,41 @@ HotspotCanvas.prototype = {
     */
     addImage: function (imageUrl, properties, callback) {
         var _this = this;
-        fabric.Image.fromURL(imageUrl, function (img) {
 
-            if (properties !== undefined) {
-                for (var p in properties) {
-                    img.set(p, properties[p]);
+        var imageObj = new Image();
+        
+        imageObj.onload = function() { 
+            var image = new fabric.Image(imageObj);
+
+            if (properties !== undefined) { 
+                for(var p in properties) { 
+                    image.set(p, properties[p]);
                 }
             }
 
-            _this.canvas.add(img);
+            _this.canvas.add(image);
 
-            if (callback !== undefined) {
-                callback(img);
+            if (callback !== undefined) { 
+                callback(image);
             }
-        });
+        }
+        imageObj.crossOrigin = 'anonymous';
+        imageObj.src = imageUrl;
+
+        // fabric.Image.fromURL(imageUrl, function (img) {
+
+        //     if (properties !== undefined) {
+        //         for (var p in properties) {
+        //             img.set(p, properties[p]);
+        //         }
+        //     }
+
+        //     _this.canvas.add(img);
+
+        //     if (callback !== undefined) {
+        //         callback(img);
+        //     }
+        // });
     },
 
     getDataUrl: function () {

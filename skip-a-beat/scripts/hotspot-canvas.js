@@ -1,12 +1,15 @@
-HotspotCanvas = function (hotspots, canvas_id, backgroundImage) {
+HotspotCanvas = function (hotspots, canvas_id, backgroundImage, eventCallback) {
 
     this.canvas = new fabric.Canvas(canvas_id);
+
 
     this.setBackground(backgroundImage);
     this.setHotspots(hotspots);
     this.setEventHandlers();
 
     this.selectedPhotoUrl = null;
+
+    this.eventCallback = eventCallback;
 }
 
 HotspotCanvas.prototype = {
@@ -28,6 +31,8 @@ HotspotCanvas.prototype = {
     addImageToHotspot: function (hotspotRect) {
         var _this = this;
 
+        hotspotRect.image = true;
+
         this.addImage(this.selectedPhotoUrl,
             {
                 originX: 'left',
@@ -46,7 +51,8 @@ HotspotCanvas.prototype = {
                         hotspotRect.width,
                         hotspotRect.height);
                     ctx.restore();
-                }
+                },
+
             }, function (img) {
 
                 if (hotspotRect.width > hotspotRect.height) {
@@ -55,8 +61,35 @@ HotspotCanvas.prototype = {
                 else {
                     img.scaleToHeight(hotspotRect.height);
                 }
-
             });
+    },
+
+    downloadCanvas: function () {        
+
+        var dataURLtoBlob = function (dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+
+        var link = document.createElement("a");
+        var imgData = this.canvas.toDataURL({
+            format: 'png',
+            multiplier: 4
+        });
+        var strDataURI = imgData.substr(22, imgData.length);
+        var blob = dataURLtoBlob(imgData);
+        var objurl = URL.createObjectURL(blob);
+
+        link.download = "helloWorld.png";
+
+        link.href = objurl;
+
+        link.click();
+
     },
 
     setEventHandlers: function () {
@@ -82,10 +115,21 @@ HotspotCanvas.prototype = {
                 if (_this.enabled) {
                     _this.addImageToHotspot(this);
                     _this.enableHotspots(false);
+                    _this.eventCallback({
+                        hotspotsRemaining: _this.getHotspotsWithoutImages(),
+                        hotspots: _this.canvas.getObjects('rect').length
+                    });
                 }
             }, this);
         }, this);
 
+    },
+
+    getHotspotsWithoutImages: function () {
+        var rects = this.canvas.getObjects('rect');
+        return rects.filter((rect) => {
+            return rect.image === undefined || rect.image === false;
+        }).length;
     },
 
     setHotspots: function (hotspots) {
@@ -98,8 +142,6 @@ HotspotCanvas.prototype = {
                 top: hotspot.y,
                 height: hotspot.height,
                 width: hotspot.width,
-                // height: hotspot.height,
-                // width: hotspot.width,
                 fill: 'transparent',
                 stroke: '#000',
                 strokeWidth: 0,

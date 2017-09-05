@@ -55,12 +55,12 @@ HotspotCanvas.prototype = {
 
             }, function (img) {
 
-                // if (hotspotRect.width > hotspotRect.height) {
-                //     img.scaleToWidth(hotspotRect.width);
-                // }
-                // else {
-                //     img.scaleToHeight(hotspotRect.height);
-                // }
+                if (hotspotRect.width > hotspotRect.height) {
+                    img.scaleToWidth(hotspotRect.width);
+                }
+                else {
+                    img.scaleToHeight(hotspotRect.height);
+                }
             });
     },
 

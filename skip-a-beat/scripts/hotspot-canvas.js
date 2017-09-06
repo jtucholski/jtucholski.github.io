@@ -39,6 +39,7 @@ HotspotCanvas.prototype = {
                 originY: 'top',
                 lockUniScaling: true,
                 lockRotation: false,
+                lockScalingFlip: true,
                 left: hotspotRect.hotspot.x,
                 top: hotspotRect.hotspot.y,
                 clipTo: function (ctx) {
@@ -54,7 +55,7 @@ HotspotCanvas.prototype = {
                 },
 
             }, function (img) {
-
+                                
                 if (hotspotRect.width > hotspotRect.height) {
                     img.scaleToWidth(hotspotRect.width);
                 }
@@ -165,6 +166,11 @@ HotspotCanvas.prototype = {
         var imageObj = new Image();
         
         imageObj.onload = function() { 
+
+            EXIF.getData(imageObj, function() { 
+                alert(EXIF.pretty(this));
+            });
+
             var image = new fabric.Image(imageObj);
 
             if (properties !== undefined) { 

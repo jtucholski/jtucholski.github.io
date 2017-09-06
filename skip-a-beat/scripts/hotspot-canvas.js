@@ -177,7 +177,7 @@ HotspotCanvas.prototype = {
             if (callback !== undefined) { 
                 callback(image);
             }    
-        });
+        }, { canvas: true});
 
         // var imageObj = new Image();
         

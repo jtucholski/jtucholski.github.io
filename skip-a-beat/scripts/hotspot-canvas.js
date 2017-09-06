@@ -163,15 +163,8 @@ HotspotCanvas.prototype = {
     addImage: function (imageUrl, properties, callback) {
         var _this = this;
 
-        var imageObj = new Image();
-        
-        imageObj.onload = function() { 
-
-            EXIF.getData(imageObj, function() { 
-                alert(EXIF.pretty(this));
-            });
-
-            var image = new fabric.Image(imageObj);
+        loadImage(imageUrl, function(img) { 
+            var image = new fabric.Image(img);
 
             if (properties !== undefined) { 
                 for(var p in properties) { 
@@ -183,10 +176,31 @@ HotspotCanvas.prototype = {
 
             if (callback !== undefined) { 
                 callback(image);
-            }
-        }
-        imageObj.crossOrigin = 'anonymous';
-        imageObj.src = imageUrl;
+            }    
+        });
+
+        // var imageObj = new Image();
+        
+        // imageObj.onload = function() { 
+
+            
+
+        //     var image = new fabric.Image(imageObj);
+
+        //     if (properties !== undefined) { 
+        //         for(var p in properties) { 
+        //             image.set(p, properties[p]);
+        //         }
+        //     }
+
+        //     _this.canvas.add(image);
+
+        //     if (callback !== undefined) { 
+        //         callback(image);
+        //     }
+        // }
+        // imageObj.crossOrigin = 'anonymous';
+        // imageObj.src = imageUrl;
 
         // fabric.Image.fromURL(imageUrl, function (img) {
 

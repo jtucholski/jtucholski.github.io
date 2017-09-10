@@ -7,20 +7,12 @@ HotspotCanvas = function (hotspots, canvas_id, backgroundImage, eventCallback) {
     this.setHotspots(hotspots);
     this.setEventHandlers();
 
-    this.selectedPhotoUrl = null;
 
     this.eventCallback = eventCallback;
 }
 
 HotspotCanvas.prototype = {
 
-    getSelectedPhotoUrl: function () {
-        return this.selectedPhotoUrl;
-    },
-
-    setSelectedPhotoUrl: function (url) {
-        this.selectedPhotoUrl = url;
-    },
 
     setBackground: function (backgroundImage) {
         this.addImage(backgroundImage, { selectable: false }, function (img) {
@@ -28,34 +20,13 @@ HotspotCanvas.prototype = {
         });
     },
 
-    addImageToHotspot: function (hotspotRect) {
-        var _this = this;
-        
-        hotspotRect.image = true;        
+    addImageToHotspot: function (hotspotRect, url) {
 
-        this.addImage(this.selectedPhotoUrl,
-            {
-                originX: 'left',
-                originY: 'top',
-                lockUniScaling: true,
-                lockRotation: false,
-                lockScalingFlip: true,
-                left: hotspotRect.hotspot.x,
-                top: hotspotRect.hotspot.y,
-                clipTo: function (ctx) {
-                    var retina = _this.canvas.getRetinaScaling();
-                    ctx.save();
-                    ctx.setTransform(retina, 0, 0, retina, 0, 0);
-                    ctx.rect(
-                        hotspotRect.left,
-                        hotspotRect.top,
-                        hotspotRect.width,
-                        hotspotRect.height);
-                    ctx.restore();
-                },
+        hotspotRect.hasImage = true;
 
-            }, function (img) {
-                                
+        this.addImage(url,
+            this.getImagePropertiesForHotspot(hotspotRect),
+            function (img) {
                 if (hotspotRect.width > hotspotRect.height) {
                     img.scaleToWidth(hotspotRect.width);
                 }
@@ -65,8 +36,13 @@ HotspotCanvas.prototype = {
             });
     },
 
-    downloadCanvas: function () {        
 
+
+    downloadCanvas: function () {
+
+        const downloadFileName = "skip-a-beat.png";
+
+        // Convert a dataUrl object to a binary object
         var dataURLtoBlob = function (dataurl) {
             var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                 bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -76,7 +52,7 @@ HotspotCanvas.prototype = {
             return new Blob([u8arr], { type: mime });
         }
 
-        var link = document.createElement("a");
+        // Get the Object Url
         var imgData = this.canvas.toDataURL({
             format: 'png',
             multiplier: 4
@@ -85,13 +61,15 @@ HotspotCanvas.prototype = {
         var blob = dataURLtoBlob(imgData);
         var objurl = URL.createObjectURL(blob);
 
+        // Bind the Object Url to <a> and click
+        var link = document.createElement("a");
         link.download = "helloWorld.png";
-
         link.href = objurl;
-
         link.click();
 
     },
+
+
 
     setEventHandlers: function () {
         var _this = this;
@@ -112,30 +90,43 @@ HotspotCanvas.prototype = {
 
         var objects = this.canvas.getObjects('rect');
         objects.forEach(function (rect) {
+
             rect.on('mouseup', function () {
-                if (_this.enabled) {
-                    _this.addImageToHotspot(this);
-                    _this.enableHotspots(false);
-                    _this.eventCallback({
-                        hotspotsRemaining: _this.getHotspotsWithoutImages(),
-                        hotspots: _this.canvas.getObjects('rect').length
-                    });
-                }
+
+                _this._rect = this;
+                var imageSelector = $("#imageselector");
+                imageSelector.click();
+
+
             }, this);
         }, this);
 
+        $("#imageselector").on("change", function (e) {
+            if (this.files) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    _this.addImageToHotspot(_this._rect, e.target.result);
+                    _this.eventCallback({
+                        hotspotsRemaining: _this.getHotspotsWithoutImages(),
+                        hotspots: _this.canvas.getObjects('rect').length
+                    })
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
     },
 
-    getHotspotsWithoutImages: function () {
-        var rects = this.canvas.getObjects('rect');
-        return rects.filter((rect) => {
-            return rect.image === undefined || rect.image === false;
-        }).length;
-    },
+
+
 
     setHotspots: function (hotspots) {
+        var _this = this;
+
         for (var i = 0; i < hotspots.length; i++) {
+
             var hotspot = hotspots[i];
+
             var clipSpot = new fabric.Rect({
                 originX: 'left',
                 originY: 'top',
@@ -151,39 +142,62 @@ HotspotCanvas.prototype = {
 
             this.canvas.add(clipSpot);
             clipSpot.hotspot = hotspot;
+
+            fabric.Image.fromURL('resources/plus.png', function(img) {                 
+                
+                img.set({
+                    originX: 'left',
+                    originY: 'top',
+                    height: 60,
+                    width: 60,
+                    left: this.hotspot.x + ((this.hotspot.width / 2) - 30),
+                    top: this.hotspot.y + ((this.hotspot.height / 2) - 30),
+                    selectable: false,
+                });
+
+                img.on("mouseup", function(e) { 
+                    _this._rect = this;
+                    var imageSelector = $("#imageselector");
+                    imageSelector.click();
+                }.bind(this));
+                
+                
+
+                _this.canvas.add(img);
+            }.bind(clipSpot));
+
+            
         }
+
+
+
     },
 
-    /*
-    * adds an image to the canvas
-    * @imageUrl relative or global url of the image
-    * @properties an object with the canvas properties to set on the image
-    * @callback a callback function to invoke after the image has been added
-    */
+
     addImage: function (imageUrl, properties, callback) {
-        var _this = this;
 
-        loadImage(imageUrl, function(img) { 
+
+        loadImage(imageUrl, function (img) {
+
             var image = new fabric.Image(img);
-
-            if (properties !== undefined) { 
-                for(var p in properties) { 
+            if (properties !== undefined) {
+                for (var p in properties) {
                     image.set(p, properties[p]);
                 }
             }
 
-            _this.canvas.add(image);
+            this.canvas.add(image);
 
-            if (callback !== undefined) { 
+            if (callback !== undefined) {
                 callback(image);
-            }    
-        }, { canvas: true});
+            }
+        }.bind(this), { canvas: true });
 
         // var imageObj = new Image();
-        
+
         // imageObj.onload = function() { 
 
-            
+
 
         //     var image = new fabric.Image(imageObj);
 
@@ -218,60 +232,37 @@ HotspotCanvas.prototype = {
         // });
     },
 
-    getDataUrl: function () {
-        return this.canvas.toDataURL({
+    // HELPER METHODS
 
-        });
+    getImagePropertiesForHotspot: function (hotspotRectangle) {
+        return {
+            originX: 'left',
+            originY: 'top',
+            lockUniScaling: true,
+            lockRotation: false,
+            lockScalingFlip: true,
+            left: hotspotRectangle.hotspot.x,
+            top: hotspotRectangle.hotspot.y,
+            clipTo: function (ctx) {
+                var retina = this.canvas.getRetinaScaling();
+                ctx.save();
+                ctx.setTransform(retina, 0, 0, retina, 0, 0);
+                ctx.rect(
+                    hotspotRectangle.left,
+                    hotspotRectangle.top,
+                    hotspotRectangle.width,
+                    hotspotRectangle.height);
+                ctx.restore();
+            }.bind(this),
+
+        };
     },
 
-    enableHotspots: function (shouldEnable) {
-
-        var strokeWidth = (shouldEnable) ? 1 : 0;
-
-        this.enabled = shouldEnable;
-
-        var objects = this.canvas.getObjects('rect');
-        objects.forEach(function (rect) {
-            rect.set('strokeWidth', strokeWidth);
-            rect.bringToFront();
-        }, this);
-
+    getHotspotsWithoutImages: function () {
+        var rects = this.canvas.getObjects('rect');
+        return rects.filter((rect) => {
+            return rect.hasImage === undefined || rect.hasImage === false;
+        }).length;
     },
 
-
-
 }
-
-function findByClipName(name) {
-    return _(canvas.getObjects()).where({
-        clipFor: name
-    }).first()
-}
-
-var clipByName = function (ctx) {
-    this.setCoords();
-    var clipRect = findByClipName(this.clipName);
-    var scaleXTo1 = (1 / this.scaleX);
-    var scaleYTo1 = (1 / this.scaleY);
-    ctx.save();
-
-    var ctxLeft = -(this.width / 2) + clipRect.strokeWidth;
-    var ctxTop = -(this.height / 2) + clipRect.strokeWidth;
-    var ctxWidth = clipRect.width - clipRect.strokeWidth;
-    var ctxHeight = clipRect.height - clipRect.strokeWidth;
-
-    ctx.translate(ctxLeft, ctxTop);
-
-    ctx.rotate(degToRad(this.angle * -1));
-    ctx.scale(scaleXTo1, scaleYTo1);
-    ctx.beginPath();
-    ctx.rect(
-        clipRect.left - this.oCoords.tl.x,
-        clipRect.top - this.oCoords.tl.y,
-        clipRect.width,
-        clipRect.height
-    );
-    ctx.closePath();
-    ctx.restore();
-}
-

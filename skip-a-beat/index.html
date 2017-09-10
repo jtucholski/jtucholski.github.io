@@ -47,18 +47,18 @@
 
             
 
-            $('#imageselector').on('change', function () {
-                hotspotCanvas.enableHotspots(true);
+            // $('#imageselector').on('change', function () {
+            //     hotspotCanvas.enableHotspots(true);
 
-                if (this.files) {
-                    var reader = new FileReader();
-                    reader.onload = function (event) {
-                        hotspotCanvas.setSelectedPhotoUrl(event.target.result);
-                    }
-                    reader.readAsDataURL(this.files[0]);
-                }
+            //     if (this.files) {
+            //         var reader = new FileReader();
+            //         reader.onload = function (event) {
+            //             hotspotCanvas.setSelectedPhotoUrl(event.target.result);
+            //         }
+            //         reader.readAsDataURL(this.files[0]);
+            //     }
 
-            });
+            // });
 
 
             var hotspotCanvas = new HotspotCanvas(hotspots, 'simple-demo', 'resources/panel-1.jpg', function(msg) { 
@@ -92,9 +92,9 @@
 
     <div id="top-bar">
         
-        <label id="imageSelectorButton" class="btn btn-primary btn-file">
-            Add Image  <input id="imageselector" type="file" style="display: none;">
-        </label>
+         
+             <input id="imageselector" type="file" style="display: none;">
+        
 
 
         <label id="instructions">6 panels remaining</label>

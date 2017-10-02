@@ -1,0 +1,283 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Flash Cards</title>
+  <meta name="description" content="Simple, animated, and imageless flash cards using HTML/CSS/jQuery.">
+  <meta name="author" content="Curtis Blackwell&hellip; sorta.">
+
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/flash_cards.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link href="http://fonts.googleapis.com/css?family=Schoolbell" rel="stylesheet" type="text/css">
+  <script src="js/vendor/modernizr-2.5.3.min.js"></script>
+  <script src="js/plugins/hammer.min.js"></script>
+</head>
+
+<body>
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+  <h1><a href="https://github.com/curtisblackwell/flash_cards">Flash Cards</a> <small>by <a href="https://github.com/curtisblackwell">curtisblackwell</a></small></h1>
+
+  <ul id="deck">
+    <li class="card">
+      <div class="side_one">
+        <code>int x;</code>
+      </div>
+      <div class="side_two">
+        <p>Declare an integer variable and call it <em>x</em></p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>(isOn) ? "It is on" : "It is not on"</code>>
+      </div>
+      <div class="side_two">
+        <p>If the <em>isOn</em> variable is true, use the value "It is on", otherwise use the value "It is not on".</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>for(int i = 0; i < 10; i++)</code>>
+      </div>
+      <div class="side_two">
+        <p>Run a for loop starting i at 0 and incrementing it by 1 each time. Quit when i is >= 10.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>public class SavingsAccount : BankAccount</code>>
+      </div>
+      <div class="side_two">
+        <p>Declare a class <em>SavingsAccount</em> that inherits from <em>BankAccount</em>.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>new Person("Tom", "Sawyer")</code>>
+      </div>
+      <div class="side_two">
+        <p><em>Instantiate</em> a new Person object and call its constructor that takes two strings.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>base.CalculateArea()</code>>
+      </div>
+      <div class="side_two">
+        <p>Call the <em>CalculateArea</em> method from this class's superclass.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>base(firstName)</code>>
+      </div>
+      <div class="side_two">
+        <p>Pass the <em>firstName</em> into the super class constructor.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>itemsInCart == 1</code>>
+      </div>
+      <div class="side_two">
+        <p>Compare the value from <em>itemsInCart</em> and give the value <em>true</em> if they are equal, false otherwise.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>area = height * width;</code>>
+      </div>
+      <div class="side_two">
+        <p>Multiple the values of the variables <em>height</em> and <em>width</em> and store the value in the variable <em>area</em>.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>person.GetFullName()</code>>
+      </div>
+      <div class="side_two">
+        <p>Call the <em>GetFullName()</em> method on the object stored in the <em>person</em> variable.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <p>What is an interface?</p>>
+      </div>
+      <div class="side_two">
+        <p>An interface is a contract that specifies which methods a class must have. It does not specify how the class must
+          implement the method.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>x++;</code>>
+      </div>
+      <div class="side_two">
+        <p>Equilavent of incrementing the value of x by one.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <p>What is a code block?</p>>
+      </div>
+      <div class="side_two">
+        <p>A block permits multiple statements of code to be grouped together.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+          if (x == 5 && y < 7) { }
+        </code>>
+      </div>
+      <div class="side_two">
+        <p>Execute the code between the braces if
+          <u>x is equal to 5</u> AND
+          <u>y is less than 7</u>.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+            name = names[0];
+          </code>>
+      </div>
+      <div class="side_two">
+        <p>Access the first value in the <em>names</em> array and store a reference to it in the <em>name</em> variable.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+          int[] numbers;
+        </code>>
+      </div>
+      <div class="side_two">
+        <p>Declare a variable called numbers that can reference an array of integers.</p>
+      </div>
+    </li>
+
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+          numbers = new int[5];
+        </code>>
+      </div>
+      <div class="side_two">
+        <p>Initialize a new array of integers of length 5 and store the reference in the variable called numbers.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+            while(hasMoreRows) { }
+          </code>>
+      </div>
+      <div class="side_two">
+        <p>Execute the code in the while block continuously while hasMoreRows is equal to true.</p>
+      </div>
+    </li>
+
+    <li class="card">
+      <div class="side_one">
+        <code>
+          x = numbers[numbers.Length - 1];
+        </code>>
+      </div>
+      <div class="side_two">
+        <p>Get the value from the last index in the <em>numbers</em> array and store a copy in the variable x.</p>
+      </div>
+    </li>
+
+
+
+  </ul>
+
+
+  <div id="nav_deck">
+    <span class="icon" id="prev" data-icon="<"><span class="visuallyhidden">Previous</span></span>
+    <span class="icon" id="flipper" data-icon="/"><span class="visuallyhidden">Flip</span></span>
+    <span class="icon" id="next" data-icon=">"><span class="visuallyhidden">Next</span></span>
+  </div>
+
+  <div id="keyboard_shortcuts">
+    <h1>Keyboard Shortcuts</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td>Previous Card</td>
+          <td>&larr;</td>
+        </tr>
+        <tr>
+          <td>Next Card</td>
+          <td>&rarr;</td>
+        </tr>
+        <tr>
+          <td>Flip Card</td>
+          <td>&uarr; <span class="or">/</span> &darr; <span class="or">/</span> Return <span class="or">/</span> Space</td>
+        </tr>
+        <tr>
+          <td>Show/Hide Keyboard Shortcuts</td>
+          <td>?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="icon" id="keyboard_shortcuts_toggle" data-icon="k"><span class="visuallyhidden">Keyboard Shortcuts</span></div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>
+    window.jQuery || document.write('<script src="js/vendor/jquery-1.7.2.min.js"><\/script>')
+  </script>
+
+
+  <script src="js/flash_cards.min.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() { 
+    var deck = document.getElementById('deck');
+
+    var mc = new Hammer(deck);
+    mc.on("tap", function(ev) { 
+      $('.current').toggleClass('flip');
+    });
+
+    mc.on("swipeleft", function(ev) { 
+      $('#deck').cycle('next');
+    });
+
+    mc.on("swiperight", function(ev) { 
+      $('#deck').cycle('prev');
+    });
+  });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+.card * {
+    padding-left: 5px;    
+}
+
+
+.card code {
+    font-size: .8em;
+    height: 300px;
+    vertical-align: middle;
+    display: table-cell;
+    width: 500px;   
+    text-align: left;     
+}
+
+.card p {
+    font-size: .8em;
+    text-align: left;    
+}
+
+.card { 
+    font-family: 'Arial';
+}
